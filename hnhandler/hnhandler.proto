@@ -1,9 +1,7 @@
 syntax = "proto3";
 package hnhandler;
 
-//option go_package = "github.com/urth-media/hnprotobuf/hnhandler";
-option go_package = "github.com/urth-media/hnprotobuf";
-//option go_package = "urth.media/hnhandler/pb";
+option go_package = "github.com/norbux/hnprotobuf";
 
 //import "google/protobuf/timestamp.proto";
 
