@@ -1,0 +1,131 @@
+syntax = "proto3";
+package hndas;
+
+option go_package = "github.com/urth-media/hnprotobuf/hndas";
+
+import "google/protobuf/timestamp.proto";
+
+// The Data Access Service (DAS) definition.
+service DAS {
+  rpc LastItems(ListFilter) returns (ItemsList) {}
+
+  rpc GetStory(ItemFilter) returns (Story) {}
+  rpc GetStoryComments(ItemFilter) returns (Conversation) {}
+  rpc GetJob(ItemFilter) returns (Job) {}
+  rpc GetJobComments(ItemFilter) returns (Conversation) {}
+  rpc GetPoll(ItemFilter) returns (Poll) {}
+  rpc GetPollComments(ItemFilter) returns (Conversation) {}
+  rpc GetUserInfo(UserFilter) returns (User) {}
+}
+
+// LastItems filter request containing ItemType, StartFromId and Count
+message ListFilter {
+    ItemType type = 1;
+    int64 start_from_id = 2;
+    int32 count = 3;
+}
+
+// Filter by single Item containing the Id 
+message ItemFilter {
+    int64 id = 1;
+}
+
+// Filter by user containing the Id (username)
+message UserFilter {
+    string id = 1;
+}
+
+// Job item type info without comments
+message Job {
+    int64 id = 1;
+    google.protobuf.Timestamp created_at = 2;
+    string created_by = 3;
+    int32 score = 4;
+    string title = 5;
+    string text = 6;
+    string url = 7;
+}
+
+// Story item type info without comments
+message Story {
+    int64 id = 1;
+    google.protobuf.Timestamp created_at = 2;
+    string created_by = 3;
+    int32 score = 4;
+    string title = 5;
+    string text = 6;
+    string url = 7;
+    int32 comments_count = 8;
+}
+
+// Poll item type info without comments
+message Poll {
+    int64 id = 1;
+    google.protobuf.Timestamp created_at = 2;
+    string created_by = 3;
+    int32 votes = 4;
+    string title = 5;
+    string text = 6;
+    int32 comments_count = 7;
+    repeated PollOpt options = 8;
+}
+
+// PollOpt item type info
+message PollOpt {
+    int64 id = 1;
+    google.protobuf.Timestamp created_at = 2;
+    string created_by = 3;
+    int32 votes = 4;
+    string text = 5;
+}
+
+// Comment item type info with related replies
+message Comment {
+    int64 id = 1;
+    google.protobuf.Timestamp created_at = 2;
+    string created_by = 3;
+    string text = 4;
+    Conversation replies = 5;
+}
+
+// Conversation is a list of comments
+message Conversation {
+    repeated Comment comments = 1;
+}
+
+// User info with activity (submitted item list)
+message User {
+    string id = 1;
+    google.protobuf.Timestamp created_at = 2;
+    int32 karma = 3;
+    string about = 4;
+    repeated Item submitted = 5;
+}
+
+// ItemType is an enumerator for the hackernews items
+enum ItemType {
+    ANY = 0;
+    JOB = 1;
+    STORY = 2;
+    COMMENT = 3;
+    POLL = 4;
+    POLLOPT = 5;
+}
+
+// Item containing id and ItemType
+message Item {
+    int64 id = 1;
+    ItemType type = 2;
+    // Optional objects
+    User user = 3;
+    Job job = 4;
+    Story story = 5;
+    Poll poll = 6;
+    PollOpt poll_opt = 7;
+    Comment comment = 8;
+    Conversation conversation = 9;
+}
+
+message ItemsList {
+    repeated Item items = 1;
+}

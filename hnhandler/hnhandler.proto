@@ -1,0 +1,86 @@
+syntax = "proto3";
+package hnhandler;
+
+//option go_package = "github.com/urth-media/hnprotobuf/hnhandler";
+option go_package = "github.com/urth-media/hnprotobuf";
+//option go_package = "urth.media/hnhandler/pb";
+
+//import "google/protobuf/timestamp.proto";
+
+// The User request message. Represents the parameter used for querying the user endpoint.
+message UserRequest {
+    string id = 1;
+}
+
+// The user response message. Represents the fields of the user object.
+message UserReply {
+    string id = 1;
+    //google.protobuf.Timestamp created = 2;
+    int64 created = 2;
+    int32 karma = 3;
+    string about = 4;
+    repeated int64 submitted = 5;
+}
+
+// The user query service definition.
+service UserGetter {
+    rpc GetUser (UserRequest) returns (UserReply);
+}
+
+// The item request message. Represents the parameter used for querying the items endpoint.
+message ItemRequest {
+    int64 id = 1;
+}
+
+// The item response message. Represents the fiels of the item object.
+message ItemReply {
+    int64 id = 1;
+    bool deleted = 2;
+    string type = 3;
+    string by = 4;
+    int64 time = 5;
+    string text = 6;
+    bool dead = 7;
+    int64 parent = 8;
+    int64 poll = 9;
+    repeated int64 kids = 10;
+    string url = 11;
+    int32 score = 12;
+    string title = 13;
+    repeated int64 parts = 14;
+    int32 descendants = 15;
+}
+
+// The item query service definition.
+service ItemGetter {
+    rpc GetItem (ItemRequest) returns (ItemReply);
+}
+
+// The new stories request message. Represents the parameter used for querying
+// the new stories endpoint. In this case it is an empty message type because
+// the method would not require any input parameter. This is a way to avoid
+// breaking code in case a parameter would be required for this service.
+// Another option to achieve this would be to use:
+//
+//  import "google/protobuf/empty.proto";
+//  ...
+//  rpc SomeService(google.protobuf.Empty) returns (Whoami) {
+//      ...
+//  }
+//
+// Refer to: https://stackoverflow.com/questions/29687243/protobuf-rpc-service-method-without-parameters
+message NewStoriesRequest {}
+
+// The new stories response message. Represents the collection of storie IDs.
+// message NewStoriesItem {
+//     int64 id = 1;
+// }
+message NewStoriesReply {
+    // int32 val = 2;
+    repeated int64 id = 1;
+}
+
+// The new stories service definition.
+service NewStoriesGetter {
+    rpc GetNewStories (NewStoriesRequest) returns (NewStoriesReply);
+}
