@@ -1,4 +1,4 @@
-module github.com/urth-media/hnprotobuf
+module github.com/norbux/hnprotobuf
 
 go 1.17
 
